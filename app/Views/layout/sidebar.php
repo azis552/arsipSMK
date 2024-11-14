@@ -54,6 +54,16 @@
               </p>
             </a>
           </li>
+          <li class="nav-header"> Surat </li>
+          <li class="nav-item">
+            <a href="<?= base_url('') ?>" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Data User
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="<?= base_url('logout') ?>" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
