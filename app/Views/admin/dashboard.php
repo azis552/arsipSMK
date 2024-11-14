@@ -17,6 +17,14 @@
               <li class="breadcrumb-item active">Dashboard v1</li>
             </ol>
           </div><!-- /.col -->
+          <div class="col">
+            <?php if(session()->getFlashdata('success')): ?>
+              <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-check"></i> Success! <?= session()->getFlashdata('success'); ?></h5>
+              </div>
+            <?php endif; ?>
+          </div>
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
