@@ -9,11 +9,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data User</h1>
+            <h1>Surat Masuk</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">User</a></li>
+              <li class="breadcrumb-item"><a href="#">Surat Masuk</a></li>
               <li class="breadcrumb-item active">Index</li>
             </ol>
           </div>
@@ -41,7 +41,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Data User</h3>
+          <h3 class="card-title">Data Surat Masuk</h3>
 
           <div class="card-tools">
           <a href="<?= base_url('users/create') ?>" class="btn btn-tool" >
@@ -60,23 +60,25 @@
             <thead>
             <tr>
               <th>Id</th>
-              <th>Nama</th>
-              <th>Email</th>
-              <th>Role</th>
+              <th>No Surat</th>
+              <th>Tanggal Surat</th>
+              <th>Tujuan Surat</th>
+              <th>Perihal</th>
               <th>Aksi</th>
             </tr>
             </thead>
             <tbody>
             <?php $i = 1; ?>
-            <?php foreach ($users as $user) : ?>
+            <?php foreach ($surats as $surat) : ?>
               <tr>
                 <td><?= $i++ ?></td>
-                <td><?= $user['name'] ?></td>
-                <td><?= $user['email'] ?></td>
-                <td><?= $user['role'] ?></td>
+                <td><?= $surat['nomor_surat'] ?></td>
+                <td><?= $surat['tanggal_surat'] ?></td>
+                <td><?= $surat['tujuan_surat'] ?></td>
+                <td><?= $surat['perihal'] ?></td>
                 <td>
-                  <a href="<?= base_url('users/edit/'.$user['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
-                  <a href="<?= base_url('users/delete/'.$user['id']) ?>" class="btn btn-danger btn-sm">Delete</a>
+                  <a href="<?= base_url('users/edit/'.$surat['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
+                  <a href="<?= base_url('users/delete/'.$surat['id']) ?>" class="btn btn-danger btn-sm">Delete</a>
                 </td>
               </tr>
             <?php endforeach; ?>

@@ -14,5 +14,9 @@ $routes->post('/users/update/(:num)', 'UsersController::update/$1');
 $routes->get('/users/delete/(:num)', 'UsersController::delete/$1');
 $routes->post('users/loginCheck', 'UsersController::loginCheck');
 $routes->get('/logout', 'UsersController::logout');
+
+$routes->get('/suratmasuk', 'SuratMasuk::index');
+
+
 $routes->get('/dashboard', 'Home::index');
 

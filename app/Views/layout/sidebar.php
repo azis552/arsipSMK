@@ -14,7 +14,7 @@
           <img src="<?= base_url('') ?>adminlte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block"> <?= session()->get('username') ?> </a>
         </div>
       </div>
 
@@ -56,10 +56,19 @@
           </li>
           <li class="nav-header"> Surat </li>
           <li class="nav-item">
+            <a href="<?= base_url('/suratmasuk') ?>" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Surat Masuk
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="<?= base_url('') ?>" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
-                Data User
+                Surat Keluar
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>
