@@ -44,7 +44,7 @@
           <h3 class="card-title">Data Surat Masuk</h3>
 
           <div class="card-tools">
-          <a href="<?= base_url('users/create') ?>" class="btn btn-tool" >
+          <a href="<?= base_url('suratmasuk/create') ?>" class="btn btn-tool" >
               <i class="fas fa-plus"></i>
             </a>
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
