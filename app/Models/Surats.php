@@ -35,12 +35,39 @@ class Surats extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
+    protected $beforeInsert   = ['logAction'];
+    protected $afterInsert    = ['logAction'];
+    protected $beforeUpdate   = ['logAction'];
+    protected $afterUpdate    = ['logAction'];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function logAction(array $data)
+    {
+        $action = '';
+
+        if (isset($data['id']) && $this->db->affectedRows() > 0) {
+            $action = isset($data['primaryKey']) ? 'update' : 'insert';
+        } elseif (isset($data['result']) && $data['result'] === true) {
+            $action = 'delete';
+        }
+
+        $logMessage = sprintf(
+            '%s: Tabel "%s", ID Record: %s',
+            ucfirst($action),
+            $this->table,
+            isset($data['id']) ? (is_array($data['id']) ? json_encode($data['id']) : $data['id']) : 'No ID'
+        );
+
+        // Simpan log
+        $db = \Config\Database::connect();
+        $db->table('logs')->insert([
+            'user_id' => session()->get('user_id'), // Ganti sesuai session user
+            'log'     => $logMessage,
+        ]);
+
+        return $data;
+    }
 }

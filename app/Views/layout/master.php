@@ -2,3 +2,4 @@
 <?= $this->include('layout/sidebar'); ?>
 <?= $this->renderSection('content'); ?>
 <?= $this->include('layout/footer'); ?>
+<?= $this->renderSection('js'); ?>

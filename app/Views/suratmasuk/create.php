@@ -65,13 +65,13 @@
                 <form action="<?= base_url('suratmasuk/store') ?>" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="">No Surat</label>
-                        <input type="text" name="nomor_surat" class="form-control">
+                        <input type="text" name="nomor_surat" value="<?= old('nomor_surat') ?>" class="form-control">
                     </div>
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
                                 <label for="">Tanggal Surat</label>
-                                <input type="date" name="tanggal_surat" class="form-control">
+                                <input type="date" name="tanggal_surat" value="<?= old('tanggal_surat') ?>" class="form-control">
                             </div>
                         </div>
                         <div class="col">
@@ -80,7 +80,7 @@
                                 <select name="tujuan_surat" id="" class="form-control">
                                     <option value="">Pilih Tujuan</option>
                                     <?php foreach ($users as $user) : ?>
-                                        <option value="<?= $user['id'] ?>"><?= $user['name'] ?></option>
+                                        <option value="<?= $user['id'] ?>" <?= old('tujuan_surat') == $user['id'] ? 'selected' : '' ?> ><?= $user['name'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -88,11 +88,11 @@
                     </div>
                     <div class="form-group">
                         <label for="">Perihal Surat</label>
-                        <input type="text" name="perihal_surat" class="form-control">
+                        <input type="text" name="perihal_surat" value="<?= old('perihal_surat') ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="">Isi</label>
-                        <textarea name="isi_surat" id="" cols="30" rows="10" class="form-control"></textarea>
+                        <textarea name="isi_surat" id="" cols="30" rows="10" class="form-control"> <?= old('isi_surat') ?> </textarea>
                     </div>
                     <div class="form-group">
                         <label for="">File Surat</label>
