@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="<?= base_url('suratmasuk/store') ?>" method="post">
+                <form action="<?= base_url('suratmasuk/store') ?>" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="">No Surat</label>
                         <input type="text" name="nomor_surat" class="form-control">
@@ -96,7 +96,7 @@
                     </div>
                     <div class="form-group">
                         <label for="">File Surat</label>
-                        <input type="file" name="document" class="form-control">
+                        <input type="file" name="file_surat" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-primary mt-2">Submit</button>
             </div>

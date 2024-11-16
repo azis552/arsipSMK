@@ -17,6 +17,7 @@ $routes->get('/logout', 'UsersController::logout');
 
 $routes->get('/suratmasuk', 'SuratMasuk::index');
 $routes->get('/suratmasuk/create', 'SuratMasuk::create');
+$routes->post('suratmasuk/store', 'SuratMasuk::store');
 
 
 $routes->get('/dashboard', 'Home::index');

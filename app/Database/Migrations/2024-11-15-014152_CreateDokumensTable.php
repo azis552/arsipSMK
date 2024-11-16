@@ -52,6 +52,9 @@ class CreateDokumensTable extends Migration
                 'null' => true
             ],
         ]);
+
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('dokumens');
     }
 
     public function down()

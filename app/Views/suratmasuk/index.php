@@ -75,7 +75,7 @@
                 <td><?= $surat['nomor_surat'] ?></td>
                 <td><?= $surat['tanggal_surat'] ?></td>
                 <td><?= $surat['tujuan_surat'] ?></td>
-                <td><?= $surat['perihal'] ?></td>
+                <td><?= $surat['perihal_surat'] ?></td>
                 <td>
                   <a href="<?= base_url('users/edit/'.$surat['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
                   <a href="<?= base_url('users/delete/'.$surat['id']) ?>" class="btn btn-danger btn-sm">Delete</a>
