@@ -240,7 +240,7 @@ class SuratMasuk extends BaseController
 
         // Path hasil PDF setelah QR Code
         $outputPathWithQr = FCPATH . 'writable/signed/' . uniqid() . '-with-qrcode.pdf';
-        $this->embedQrCodeInPdf($pdfPath, $qrCodePath, $outputPathWithQr, $x, $y, $page );
+        $this->embedQrCodeInPdf($pdfPath, $qrCodePath, $outputPathWithQr, $x, $y, $page);
 
         // Path Private Key
         $privateKeyPath = FCPATH . 'writable/keys/private.key';
@@ -265,7 +265,7 @@ class SuratMasuk extends BaseController
             'document_path' => base_url('writable/signed/' . basename($outputPathSigned))
         ]);
 
-        return redirect()->to('/surat')->with('success', 'Signature berhasil disimpan.');
+        return redirect()->to('/suratmasuk')->with('success', 'Signature berhasil disimpan.');
     }
 
     // Generate QR Code
@@ -278,23 +278,23 @@ class SuratMasuk extends BaseController
     }
 
     // Embed QR Code into PDF
-    private function embedQRCodeInPDF($pdfPath, $qrCodePath, $outputPath, $x_pixel, $y_pixel, $page) {
+    private function embedQRCodeInPDF($pdfPath, $qrCodePath, $outputPath, $x_pixel, $y_pixel, $page)
+    {
         // Konversi koordinat dari piksel ke milimeter (1 px = 25.4 mm / 72 px)
         $dpi = 72; // Default DPI
         $x_mm = ((float)$x_pixel * 25.4) / $dpi; // Konversi x koordinat
         $y_mm = ((float)$y_pixel * 25.4) / $dpi; // Konversi y koordinat
-    
         // Proses FPDI untuk menambahkan QR Code ke PDF
         $fpdi = new Fpdi();
         $pageCount = $fpdi->setSourceFile($pdfPath);
-    
+
         for ($i = 1; $i <= $pageCount; $i++) {
             $templateId = $fpdi->importPage($i);
             $size = $fpdi->getTemplateSize($templateId);
-    
+
             $fpdi->AddPage($size['orientation'], [$size['width'], $size['height']]);
             $fpdi->useTemplate($templateId);
-    
+
             // Tambahkan QR Code hanya pada halaman yang sesuai
             if ($i == $page) {
                 if (file_exists($qrCodePath)) {
@@ -305,11 +305,11 @@ class SuratMasuk extends BaseController
                 }
             }
         }
-    
+
         // Simpan PDF hasil modifikasi
         $fpdi->Output($outputPath, 'F');
     }
-    
+
 
     // Sign document using OpenSSL
     private function signDocument($documentPath, $privateKeyPath)
@@ -332,35 +332,20 @@ class SuratMasuk extends BaseController
     // Embed signature into PDF metadata
     private function embedSignatureInPdf($pdfPath, $signature, $outputPath)
     {
-        // Buat instance FPDI
         $pdf = new Fpdi();
+        $pdf->setSourceFile($pdfPath);
+        $pageCount = $pdf->setSourceFile($pdfPath); // Hitung jumlah halaman di PDF asli
 
-        // Memuat file PDF sumber
-        $pageCount = $pdf->setSourceFile($pdfPath);
-
-        // Loop untuk menyalin halaman dari PDF sumber
-        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-            // Impor halaman
-            $templateId = $pdf->importPage($pageNo);
-            $pdf->AddPage();
-            $pdf->useTemplate($templateId);
-
-            // Jika ini adalah halaman tertentu, tambahkan tanda tangan
-            if ($pageNo == 1) { // Contoh: Menambahkan tanda tangan pada halaman pertama
-                $x = 150; // Posisi X
-                $y = 250; // Posisi Y
-                $width = 50; // Lebar gambar tanda tangan
-                $pdf->Image($signature, $x, $y, $width);
-            }
+        // Loop untuk setiap halaman
+        for ($page = 1; $page <= $pageCount; $page++) {
+            $template = $pdf->importPage($page); // Impor halaman
+            $pdf->AddPage(); // Tambahkan halaman baru
+            $pdf->useTemplate($template); // Gunakan template halaman
         }
 
-        // Menambahkan metadata
-        $pdf->SetTitle('Document with Digital Signature');
-        $pdf->SetAuthor('Author Name');
-        $pdf->SetSubject('Digital Signature');
-        $pdf->SetKeywords('Digital Signature');
-
-        // Menyimpan PDF hasil
+        // Add metadata for signature
+        $pdf->SetTitle("Document with Digital Signature");
+        $pdf->SetKeywords($signature);
         $pdf->Output($outputPath, 'F');
     }
 }
