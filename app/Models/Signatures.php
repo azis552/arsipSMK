@@ -12,7 +12,7 @@ class Signatures extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['document_id', 'signature_data'];
+    protected $allowedFields    = ['document_id', 'signature_data','created_at'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

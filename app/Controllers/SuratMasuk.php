@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Dokumens;
+use App\Models\Qrcode as ModelsQrcode;
+use App\Models\Signatures;
 use App\Models\Surats;
 use App\Models\Users;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -22,7 +24,8 @@ class SuratMasuk extends BaseController
             ->where('surats.jenis_surat', 'Surat Masuk')
             ->join('users', 'surats.tujuan_surat = users.id', 'left')
             ->join('dokumens', 'surats.document = dokumens.id', 'left')
-            ->select('surats.*, users.name as name, dokumens.document_path as file')
+            ->select('surats.*, users.name as name, dokumens.document_path, dokumens.is_signed ')
+            ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray(); // Ambil data sebagai array
         return view('suratmasuk/index', ['surats' => $suratModel]);
@@ -75,7 +78,8 @@ class SuratMasuk extends BaseController
                 'perihal_surat' => $this->request->getPost('perihal_surat'),
                 'isi_surat' => $this->request->getPost('isi_surat'),
                 'document' => $Dokumen->getInsertID(),
-                'jenis_surat' => 'Surat Masuk'
+                'jenis_surat' => 'Surat Masuk',
+                'created_at' => date('Y-m-d H:i:s')
             ]);
         } else {
             $suratModel->save([
@@ -219,6 +223,20 @@ class SuratMasuk extends BaseController
         $qrCodePath = FCPATH . 'writable/qrcodes/' . uniqid() . '.png';
         $this->generateQrCode("Document Hash: $documentHash", $qrCodePath);
 
+        $id_dokumen = $suratModel
+            ->join('dokumens', 'surats.document = dokumens.id')
+            ->select('dokumens.id')
+            ->where('surats.id', $id)
+            ->get()
+            ->getRowArray();
+
+        $qrcode = new ModelsQrcode();
+        $qrcode->save([
+            'document_id' => $id_dokumen,
+            'qrcode_path' => basename($qrCodePath)
+        ]);
+        
+
         return view('/suratmasuk/signature', [
             'id' => $id,
             'pdfPath' => base_url('writable/uploads/' . $surat['name']),
@@ -262,8 +280,17 @@ class SuratMasuk extends BaseController
             ->getRowArray();
         $dokumenModel = new Dokumens();
         $dokumenModel->update($id_dokumen, [
-            'document_path' => base_url('writable/signed/' . basename($outputPathSigned))
+            'document_path' => base_url('writable/signed/' . basename($outputPathSigned)),
+            'verified_by' => session()->get('user_id'),
+            'verified_at' => date('Y-m-d H:i:s'),
+            'is_signed' => 1,
         ]);
+        $signature = new Signatures();
+        $data = [
+            'document_id' => intval($id_dokumen['id']),
+            'signature_data' => $signature,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
 
         return redirect()->to('/suratmasuk')->with('success', 'Signature berhasil disimpan.');
     }

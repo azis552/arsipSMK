@@ -12,7 +12,7 @@ class Qrcode extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id','document_id','qrcode_data'];
+    protected $allowedFields    = ['document_id','qrcode_data'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

@@ -18,7 +18,7 @@
             <label for="file_surat">File Surat</label>
             <input type="file" name="file_surat" class="form-control">
           </div>
-        
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,11 +104,15 @@
               <td><?= $surat['name'] ?></td>
               <td><?= $surat['perihal_surat'] ?></td>
               <td>
-                <?php if ($surat['file']) : ?>
-                  <a target="_blank" href="<?= base_url($surat['file']) ?>">Lihat File</a>
+                <?php if ($surat['document_path']) : ?>
+                  <?php if(($surat['is_signed']) == 1) { ?>
+                    <a target="_blank" href="<?= $surat['document_path'] ?>">Lihat File</a>
+                  <?php }else{ ?>
+                    <a target="_blank" href="<?= base_url($surat['document_path']) ?>">Lihat File</a>
+                  <?php } ?>
                 <?php else: ?>
                   <!-- Button trigger modal -->
-                  <button  data-id="<?= $surat['id'] ?>" type="button" class="btn btn-primary id_surat" data-toggle="modal" data-target="#staticBackdrop">
+                  <button data-id="<?= $surat['id'] ?>" type="button" class="btn btn-primary id_surat" data-toggle="modal" data-target="#staticBackdrop">
                     Upload File
                   </button>
 

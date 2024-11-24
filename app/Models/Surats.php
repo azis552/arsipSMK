@@ -12,7 +12,7 @@ class Surats extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['jenis_surat', 'nomor_surat', 'tanggal_surat', 'tujuan_surat', 'perihal_surat', 'isi_surat','document'];
+    protected $allowedFields    = ['jenis_surat', 'nomor_surat', 'tanggal_surat', 'tujuan_surat', 'perihal_surat', 'isi_surat','document','created_at', 'updated_at'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
