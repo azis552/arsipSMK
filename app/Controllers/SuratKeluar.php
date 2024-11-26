@@ -15,27 +15,27 @@ use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\TcpdfFpdi;
 use TCPDF;
 
-class SuratMasuk extends BaseController
+class SuratKeluar extends BaseController
 {
     public function index()
     {
         $suratModel = new Surats();
         $suratModel = $suratModel->db->table('surats')
-            ->where('surats.jenis_surat', 'Surat Masuk')
+            ->where('surats.jenis_surat', 'Surat Keluar')
             ->join('users', 'surats.tujuan_surat = users.id', 'left')
             ->join('dokumens', 'surats.document = dokumens.id', 'left')
             ->select('surats.*, users.name as name, dokumens.document_path, dokumens.is_signed ')
             ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray(); // Ambil data sebagai array
-        return view('suratmasuk/index', ['surats' => $suratModel]);
+        return view('suratkeluar/index', ['surats' => $suratModel]);
     }
 
     public function create()
     {
         $userModel = new Users();
         $users = $userModel->findAll();
-        return view('suratmasuk/create', ['users' => $users]);
+        return view('suratkeluar/create', ['users' => $users]);
     }
 
     public function store()
@@ -51,11 +51,11 @@ class SuratMasuk extends BaseController
             ]
         );
         if (!$validasi) {
-            return redirect()->to('/suratmasuk/create')->withInput()->with('errors', $this->validator->getErrors());
+            return redirect()->to('/suratkeluar/create')->withInput()->with('errors', $this->validator->getErrors());
         }
         $file = $this->request->getFile('file_surat');
         if ($file->isValid()) {
-            $newNama = 'suratMasuk_' . time() . '.' . $file->getExtension();
+            $newNama = 'suratkeluar_' . time() . '.' . $file->getExtension();
             if ($file->isValid() && !$file->hasMoved()) {
                 $filePath = 'writable/uploads/';
                 $simpan = $file->move($filePath, $newNama);
@@ -66,7 +66,7 @@ class SuratMasuk extends BaseController
                     'upload_by' => session()->get('user_id'),
                 ]);
             } else {
-                return redirect()->to('/suratmasuk/create')->withInput()->with('error', 'File Upload Gagal diupload');
+                return redirect()->to('/suratkeluar/create')->withInput()->with('error', 'File Upload Gagal diupload');
             }
         }
         $suratModel = new Surats();
@@ -78,7 +78,7 @@ class SuratMasuk extends BaseController
                 'perihal_surat' => $this->request->getPost('perihal_surat'),
                 'isi_surat' => $this->request->getPost('isi_surat'),
                 'document' => $Dokumen->getInsertID(),
-                'jenis_surat' => 'Surat Masuk',
+                'jenis_surat' => 'Surat Keluar',
                 'created_at' => date('Y-m-d H:i:s')
             ]);
         } else {
@@ -89,22 +89,22 @@ class SuratMasuk extends BaseController
                 'perihal_surat' => $this->request->getPost('perihal_surat'),
                 'isi_surat' => $this->request->getPost('isi_surat'),
 
-                'jenis_surat' => 'Surat Masuk'
+                'jenis_surat' => 'Surat Keluar'
             ]);
         }
-        return redirect()->to('/suratmasuk')->with('success', 'Berhasil tambah surat masuk');
+        return redirect()->to('/suratkeluar')->with('success', 'Berhasil tambah Surat Keluar');
     }
 
     public function uploadfile()
     {
         $id = $this->request->getPost('id_surat');
         $file = $this->request->getFile('file_surat');
-        $newNama = 'suratMasuk_' . time() . '.' . $file->getExtension();
+        $newNama = 'suratkeluar_' . time() . '.' . $file->getExtension();
         if ($file->isValid() && !$file->hasMoved()) {
             $filePath = 'writable/uploads/';
             $simpan = $file->move($filePath, $newNama);
         } else {
-            return redirect()->to('/suratmasuk/index')->withInput()->with('error', 'File Upload Gagal diupload');
+            return redirect()->to('/suratkeluar/index')->withInput()->with('error', 'File Upload Gagal diupload');
         }
 
         $Dokumen = new Dokumens();
@@ -115,7 +115,7 @@ class SuratMasuk extends BaseController
         ]);
         $suratModel = new Surats();
         $suratModel->update($id, ['document' => $Dokumen->getInsertID()]);
-        return redirect()->to('/suratmasuk')->with('success', 'Berhasil tambah file surat masuk');
+        return redirect()->to('/suratkeluar')->with('success', 'Berhasil tambah file Surat Keluar');
     }
 
     public function edit($id)
@@ -124,7 +124,7 @@ class SuratMasuk extends BaseController
         $users = $userModel->findAll();
         $suratModel = new Surats();
         $surat = $suratModel->find($id);
-        return view('suratmasuk/edit', ['users' => $users, 'suratmasuk' => $surat]);
+        return view('suratkeluar/edit', ['users' => $users, 'suratkeluar' => $surat]);
     }
     public function update($id)
     {
@@ -141,12 +141,12 @@ class SuratMasuk extends BaseController
 
 
         if (!$validasi) {
-            return redirect()->to('/suratmasuk/edit/' . $id)->withInput()->with('errors', $this->validator->getErrors());
+            return redirect()->to('/suratkeluar/edit/' . $id)->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $file = $this->request->getFile('file_surat');
         if ($file->isValid()) {
-            $newNama = 'suratMasuk_' . time() . '.' . $file->getExtension();
+            $newNama = 'suratkeluar_' . time() . '.' . $file->getExtension();
             if ($file->isValid() && !$file->hasMoved()) {
                 $filePath = 'writable/uploads/';
                 $simpan = $file->move($filePath, $newNama);
@@ -157,7 +157,7 @@ class SuratMasuk extends BaseController
                     'upload_by' => session()->get('user_id'),
                 ]);
             } else {
-                return redirect()->to('/suratmasuk/create')->withInput()->with('error', 'File Upload Gagal diupload');
+                return redirect()->to('/suratkeluar/create')->withInput()->with('error', 'File Upload Gagal diupload');
             }
         }
         $suratModel = new Surats();
@@ -170,7 +170,7 @@ class SuratMasuk extends BaseController
                 'perihal_surat' => $this->request->getPost('perihal_surat'),
                 'isi_surat' => $this->request->getPost('isi_surat'),
                 'document' => $Dokumen->getInsertID(),
-                'jenis_surat' => 'Surat Masuk'
+                'jenis_surat' => 'Surat Keluar'
             ]);
         } else {
             $suratModel->update($id, [
@@ -179,10 +179,10 @@ class SuratMasuk extends BaseController
                 'tujuan_surat' => $this->request->getPost('tujuan_surat'),
                 'perihal_surat' => $this->request->getPost('perihal_surat'),
                 'isi_surat' => $this->request->getPost('isi_surat'),
-                'jenis_surat' => 'Surat Masuk'
+                'jenis_surat' => 'Surat Keluar'
             ]);
         }
-        return redirect()->to('/suratmasuk')->with('success', 'Berhasil update surat masuk');
+        return redirect()->to('/suratkeluar')->with('success', 'Berhasil update Surat Keluar');
     }
 
     public function delete($id)
@@ -196,12 +196,12 @@ class SuratMasuk extends BaseController
         } else {
             $suratModel->delete($id);
         }
-        return redirect()->to('/suratmasuk')->with('success', 'Berhasil hapus surat masuk');
+        return redirect()->to('/suratkeluar')->with('success', 'Berhasil hapus Surat Keluar');
     }
     public function framesignature($id)
     {
         // Halaman utama yang memuat iframe untuk PDF Viewer
-        return view('suratmasuk/framesignature', ['id' => $id]);
+        return view('suratkeluar/framesignature', ['id' => $id]);
     }
     // Tampilkan halaman signature
     public function signature($id)
@@ -219,7 +219,7 @@ class SuratMasuk extends BaseController
         $pdfPath = FCPATH . 'writable/uploads/' . $surat['name'];
         $documentHash = hash_file('sha256', $pdfPath);
 
-        $url = base_url("suratmasuk/signature/$id"); // URL yang ingin dimasukkan dalam QR Code
+        $url = base_url("suratkeluar/signature/$id"); // URL yang ingin dimasukkan dalam QR Code
         // Generate QR Code
         $qrCodePath = FCPATH . 'writable/qrcodes/' . uniqid() . '.png';
         $this->generateQrCode($url, $qrCodePath);
@@ -238,7 +238,7 @@ class SuratMasuk extends BaseController
         ]);
         
 
-        return view('/suratmasuk/signature', [
+        return view('/suratkeluar/signature', [
             'id' => $id,
             'pdfPath' => base_url('writable/uploads/' . $surat['name']),
             'qrCodePath' => base_url('writable/qrcodes/' . basename($qrCodePath)),
@@ -293,7 +293,7 @@ class SuratMasuk extends BaseController
             'created_at' => date('Y-m-d H:i:s'),
         ];
 
-        return redirect()->to('/suratmasuk')->with('success', 'Signature berhasil disimpan.');
+        return redirect()->to('/suratkeluar')->with('success', 'Signature berhasil disimpan.');
     }
 
     // Generate QR Code

@@ -28,5 +28,22 @@ $routes->get('/suratmasuk/framesignature/(:num)', 'SuratMasuk::framesignature/$1
 
 $routes->post('/surat/save-coordinates', 'SuratMasuk::saveCoordinates');
 
+$routes->get('/suratkeluar', 'suratkeluar::index');
+$routes->get('/suratkeluar/create', 'suratkeluar::create');
+$routes->post('suratkeluar/store', 'suratkeluar::store');
+$routes->post('suratkeluar/uploadfile', 'suratkeluar::uploadfile');
+$routes->get('/suratkeluar/edit/(:num)', 'suratkeluar::edit/$1');
+$routes->post('/suratkeluar/update/(:num)', 'suratkeluar::update/$1');
+$routes->get('/suratkeluar/delete/(:num)', 'suratkeluar::delete/$1');
+$routes->get('/suratkeluar/signature/(:num)', 'suratkeluar::signature/$1');
+$routes->get('/suratkeluar/framesignature/(:num)', 'suratkeluar::framesignature/$1');
+
+
+$routes->post('/suratkeluar/save-coordinates', 'SuratKeluar::saveCoordinates');
+
 $routes->get('/dashboard', 'Home::index');
+
+$routes->get('uploadValidation', 'PdfValidationController::uploadValidationPage');
+$routes->post('validatePdf', 'PdfValidationController::validatePdf');
+
 
