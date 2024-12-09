@@ -40,7 +40,7 @@
             <a href="pages/widgets.html" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
-                Widgets
+                Dashboard
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>
@@ -50,6 +50,15 @@
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Data User
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= base_url('tandatangan') ?>" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Tanda Tangan
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>

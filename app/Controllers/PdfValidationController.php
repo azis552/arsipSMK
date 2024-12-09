@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 
 use setasign\Fpdi\Fpdi;
-
+use Smalot\PdfParser\Parser;
 
 class PdfValidationController extends BaseController
 {
@@ -29,35 +29,42 @@ class PdfValidationController extends BaseController
 
         $filePath = FCPATH . 'writable/uploads/temp/';
         $simpan = $file->move($filePath, $file->getName());
-        var_dump($simpan);die();
+        // var_dump($simpan);die;
         // Menggunakan realpath() untuk mendapatkan jalur absolut
-        $absolutePath = realpath($filePath);
+        $absolutePath = realpath($filePath.$file->getName());
         // Baca metadata PDF menggunakan PDFParser
         $parser = new Parser();
         $pdf = $parser->parseFile($absolutePath);
 
         // Ambil metadata dari dokumen PDF
         $details = $pdf->getDetails();
-        unlink($filePath); // Hapus file sementara
-
+        // Path Private Key
+        $privateKeyPath = FCPATH . 'writable/keys/private.key';
+        $privateKeyPathcontent = file_get_contents($privateKeyPath);
         // Periksa apakah metadata Keywords ada
         $documentHash = $details['Keywords'] ?? null;
         if (!$documentHash) {
             return redirect()->back()->with('error', 'Metadata hash tidak ditemukan.');
+        }else{
+            // Cocokkan hash metadata dengan hash dokumen
+            if ( $documentHash == $privateKeyPathcontent) {
+                return view('validate_document', [
+                    'result' => 'Dokumen valid',
+                ]);
+            } else {
+                return view('validate_document', [
+                    'result' => 'Dokumen tidak valid atau telah dimodifikasi',
+                ]);
+            }
         }
+        
 
-        // Hash ulang dokumen
-        $calculatedHash = hash_file('sha256', $filePath);
+        // validasi
+        
 
-        // Cocokkan hash metadata dengan hash dokumen
-        if ($calculatedHash === $documentHash) {
-            return view('validate_document', [
-                'result' => 'Dokumen valid',
-            ]);
-        } else {
-            return view('validate_document', [
-                'result' => 'Dokumen tidak valid atau telah dimodifikasi',
-            ]);
-        }
+        
+        unlink($absolutePath); // Hapus file sementara
+
+        
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Dokumens;
 use App\Models\Qrcode as ModelsQrcode;
 use App\Models\Signatures;
 use App\Models\Surats;
+use App\Models\TandaTangan;
 use App\Models\Users;
 use CodeIgniter\HTTP\ResponseInterface;
 use Endroid\QrCode\QrCode;
@@ -218,7 +219,9 @@ class SuratMasuk extends BaseController
         // Path file PDF
         $pdfPath = FCPATH . 'writable/uploads/' . $surat['name'];
         $documentHash = hash_file('sha256', $pdfPath);
-
+        $TandatanganModel = new TandaTangan();
+        $ttd = $TandatanganModel->db->table('tandatangans')->where('id_pegawai', session()->get('user_id'))->orderBy('id', 'DESC')->get()->getFirstRow();
+        $pathttd = FCPATH . 'writable/ttd/'.$ttd->ttd;
         $url = base_url("suratmasuk/signature/$id"); // URL yang ingin dimasukkan dalam QR Code
         // Generate QR Code
         $qrCodePath = FCPATH . 'writable/qrcodes/' . uniqid() . '.png';
@@ -241,9 +244,9 @@ class SuratMasuk extends BaseController
         return view('/suratmasuk/signature', [
             'id' => $id,
             'pdfPath' => base_url('writable/uploads/' . $surat['name']),
-            'qrCodePath' => base_url('writable/qrcodes/' . basename($qrCodePath)),
+            'qrCodePath' => base_url('writable/ttd/' . basename($pathttd)),
             'pdfPathBack' => FCPATH . 'writable/uploads/' . $surat['name'],
-            'qrCodePathBack' => FCPATH . 'writable/qrcodes/' . basename($qrCodePath),
+            'qrCodePathBack' => FCPATH . 'writable/ttd/' . basename($pathttd),
         ]);
     }
 
@@ -257,9 +260,12 @@ class SuratMasuk extends BaseController
         $pdfPath = $this->request->getPost('pdfPath'); // Path file PDF asli
         $qrCodePath = $this->request->getPost('qrCodePath'); // Path file QR Code
 
+        $TandatanganModel = new TandaTangan();
+        $ttd = $TandatanganModel->db->table('tandatangans')->where('id_pegawai', session()->get('user_id'))->orderBy('id', 'DESC')->get()->getFirstRow();
+        $path = FCPATH . 'writable/ttd/'.$ttd->ttd;
         // Path hasil PDF setelah QR Code
         $outputPathWithQr = FCPATH . 'writable/signed/' . uniqid() . '-with-qrcode.pdf';
-        $this->embedQrCodeInPdf($pdfPath, $qrCodePath, $outputPathWithQr, $x, $y, $page);
+        $this->embedQrCodeInPdf($pdfPath, $path, $outputPathWithQr, $x, $y, $page);
 
         // Path Private Key
         $privateKeyPath = FCPATH . 'writable/keys/private.key';
@@ -323,13 +329,16 @@ class SuratMasuk extends BaseController
             $fpdi->AddPage($size['orientation'], [$size['width'], $size['height']]);
             $fpdi->useTemplate($templateId);
 
+            $TandatanganModel = new TandaTangan();
+            $ttd = $TandatanganModel->db->table('tandatangans')->where('id_pegawai', session()->get('user_id'))->orderBy('id', 'DESC')->get()->getFirstRow();
+            $pathttd = FCPATH . 'writable/ttd/'.$ttd->ttd;
             // Tambahkan QR Code hanya pada halaman yang sesuai
             if ($i == $page) {
-                if (file_exists($qrCodePath)) {
+                if (file_exists($pathttd)) {
                     // Menambahkan QR Code pada posisi yang sudah dihitung (dalam milimeter)
-                    $fpdi->Image($qrCodePath, $x_mm, $y_mm, 30, 30); // Sesuaikan ukuran QR Code sesuai kebutuhan
+                    $fpdi->Image($pathttd, $x_mm, $y_mm, 30, 30); // Sesuaikan ukuran QR Code sesuai kebutuhan
                 } else {
-                    throw new Exception("QR Code file not found: " . $qrCodePath);
+                    throw new Exception("QR Code file not found: " . $pathttd);
                 }
             }
         }
@@ -370,10 +379,13 @@ class SuratMasuk extends BaseController
             $pdf->AddPage(); // Tambahkan halaman baru
             $pdf->useTemplate($template); // Gunakan template halaman
         }
+        // Path Private Key
+        $privateKeyPath = FCPATH . 'writable/keys/private.key';
+        $privateKeycontent = file_get_contents($privateKeyPath);
 
         // Add metadata for signature
         $pdf->SetTitle("Document with Digital Signature By ". session()->get('username'));
-        $pdf->SetKeywords($signature);
+        $pdf->SetKeywords($privateKeycontent);
         $pdf->Output($outputPath, 'F');
     }
 }

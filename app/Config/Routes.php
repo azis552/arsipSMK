@@ -46,4 +46,6 @@ $routes->get('/dashboard', 'Home::index');
 $routes->get('uploadValidation', 'PdfValidationController::uploadValidationPage');
 $routes->post('validatePdf', 'PdfValidationController::validatePdf');
 
+$routes->get('tandatangan', 'TandaTanganController::index');
+$routes->post('/tandatangan/store', 'TandaTanganController::store');
 
