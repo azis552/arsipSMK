@@ -37,7 +37,7 @@
                with font-awesome or any other icon font library -->
 
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="<?= base_url('dashboard') ?>" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Dashboard
@@ -78,6 +78,15 @@
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Surat Keluar
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= base_url('/uploadValidation') ?>" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Validasi Surat
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>

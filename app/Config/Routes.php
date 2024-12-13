@@ -24,6 +24,7 @@ $routes->post('/suratmasuk/update/(:num)', 'SuratMasuk::update/$1');
 $routes->get('/suratmasuk/delete/(:num)', 'SuratMasuk::delete/$1');
 $routes->get('/suratmasuk/signature/(:num)', 'SuratMasuk::signature/$1');
 $routes->get('/suratmasuk/framesignature/(:num)', 'SuratMasuk::framesignature/$1');
+$routes->get('/suratmasuk/qrcode/(:num)', 'SuratMasuk::qrcode/$1');
 
 
 $routes->post('/surat/save-coordinates', 'SuratMasuk::saveCoordinates');
@@ -37,7 +38,7 @@ $routes->post('/suratkeluar/update/(:num)', 'suratkeluar::update/$1');
 $routes->get('/suratkeluar/delete/(:num)', 'suratkeluar::delete/$1');
 $routes->get('/suratkeluar/signature/(:num)', 'suratkeluar::signature/$1');
 $routes->get('/suratkeluar/framesignature/(:num)', 'suratkeluar::framesignature/$1');
-
+$routes->get('/suratmasuk/qrcode/(:num)', 'SuratMasuk::qrcode/$1');
 
 $routes->post('/suratkeluar/save-coordinates', 'SuratKeluar::saveCoordinates');
 

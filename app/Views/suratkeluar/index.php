@@ -121,6 +121,8 @@
               </td>
               <td>
                 <a target="_blank" href="<?= base_url('suratkeluar/signature/' . $surat['id']) ?>" class="btn btn-info btn-sm">Signature</a>
+                
+                <a target="_blank" href="<?= base_url('suratmasuk/qrcode/' . $surat['id']) ?>" class="btn btn-primary btn-sm">QR Code</a>
                 <a href="<?= base_url('suratkeluar/edit/' . $surat['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
                 <a href="<?= base_url('suratkeluar/delete/' . $surat['id']) ?>" class="btn btn-danger btn-sm">Delete</a>
               </td>

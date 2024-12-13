@@ -76,8 +76,10 @@
                         </form>
                     </div>
                     
-                    <div class="col">
-                        <img id="signature_image_preview" src="<?= base_url('writable/ttd/'.$ttd->ttd) ?>" alt="Tanda Tangan">
+                    <div class="col" style="background-color: #B2C9AD; text-align: center" >
+                        <?php if (isset($ttd)): ?>
+                        <img style="margin-top: 30px;" id="signature_image_preview" src="<?= base_url('writable/ttd/'.$ttd->ttd) ?>" alt="Tanda Tangan">
+                        <?php endif; ?>
                     </div>
                 </div>
 

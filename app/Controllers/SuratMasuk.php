@@ -388,4 +388,44 @@ class SuratMasuk extends BaseController
         $pdf->SetKeywords($privateKeycontent);
         $pdf->Output($outputPath, 'F');
     }
+
+    public function qrcode($id)
+    {
+        $suratModel = new Surats();
+        $suratModel = $suratModel->db->table('surats')
+            ->where('surats.jenis_surat', 'Surat Masuk')
+            ->join('users', 'surats.tujuan_surat = users.id', 'left')
+            ->join('dokumens', 'surats.document = dokumens.id', 'left')
+            ->select('surats.*, users.name as name, dokumens.document_path, dokumens.is_signed ')
+            ->orderBy('created_at', 'DESC')
+            ->where('surats.id', $id)
+            ->get()
+            ->getRowArray();
+            $id_dokumen = $suratModel['document_path'];
+        // 1. Buat QR Cod
+        $qrCode = new QrCode($id_dokumen);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        
+        // 2. Dapatkan data PNG dari QR Code
+        $pngData = $result->getString();
+        
+        // 3. Konversi PNG ke Gambar PHP
+        $image = imagecreatefromstring($pngData);
+        
+        if ($image === false) {
+            throw new \Exception('Gagal membuat gambar dari string binary PNG');
+        }
+        
+        // 4. Simpan gambar ke output buffer sebagai JPG
+        header('Content-Type: image/jpeg');
+        header('Content-Disposition: attachment; filename="qrcode.jpg"'); // Nama file saat diunduh
+        imagejpeg($image, null, 100); // 100 = kualitas maksimum
+        
+        // 5. Bersihkan resource gambar
+        imagedestroy($image);
+        
+        // Matikan eksekusi script untuk memastikan tidak ada data tambahan yang ditampilkan
+        exit;
+    }
 }
